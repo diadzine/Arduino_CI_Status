@@ -1,0 +1,14 @@
+ARDUINO_SKETCHBOOK = /path/to/Arduino/sketchbook
+
+# For Arduino Nano
+# BOARD_TAG = nano328
+# ARDUINO_PORT = /dev/serial/by-id/<your_devive_id_here>
+
+# For Arduino Uno
+BOARD_TAG = uno
+ARDUINO_PORT = /dev/serial/by-id/<your_devive_id_here>
+
+ARDUINO_LIBS = SoftwareSerial SerialCommand SPI WS2801 EEPROM
+
+include /usr/share/arduino/Arduino.mk
+
