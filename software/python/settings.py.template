@@ -1,0 +1,30 @@
+
+DEVICE = {
+    'PORT': '/dev/serial/by-id/<device_id>',
+    'BAUDRATE': 9600
+}
+
+POLL_INTERVAL = 1
+
+PROJECTS = [
+    {
+        'id': 1,
+        'name': '',
+        'active': True,
+    },
+    {
+        'id': 2,
+        'name': '',
+        'active': True,
+    },
+    {
+        'id': 3,
+        'name': '',
+        'active': True,
+    },
+    {
+        'id': 4,
+        'name': '',
+        'active': True,
+    }
+]
