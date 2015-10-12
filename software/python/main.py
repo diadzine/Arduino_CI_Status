@@ -59,6 +59,10 @@ def open_serial_connection():
             )
         )
         sys.exit(1)
+
+    # Wait 1 sec while opening serial port
+    time.sleep(1)
+
     return ser
 
 
@@ -77,7 +81,10 @@ def poll_projects(ser):
                 job = connection.get_job(jobname)
 
                 if not job.is_enabled():
-                    cmd_string = '{} {}\r\n'.format("OFF", project.get('id'))
+                    cmd_string = '{} {}\r\n'.format(
+                        "DISABLED",
+                        project.get('id')
+                    )
                 else:
                     lb = job.get_last_build()
 
