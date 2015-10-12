@@ -1,3 +1,6 @@
+**/*~
 software/arduino/build*
 software/arduino/Makefile
-
+software/python/settings.py
+__pycache__
+logfile
