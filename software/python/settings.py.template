@@ -1,10 +1,30 @@
+# settings.py
+
+DEBUG = True
 
 DEVICE = {
     'PORT': '/dev/serial/by-id/<device_id>',
     'BAUDRATE': 9600
 }
 
-POLL_INTERVAL = 1
+POLL_INTERVAL = 300
+
+
+# PROJECT example
+# {
+#     'id': 1,
+#     'name': 'Dummy Project',
+#     'server': {
+#         'baseurl': 'https://example.com/jenkins',
+#         'username': 'username',
+#         'pass_or_token': 'api_token_key',
+#         'job': 'dummy-project',
+#         'extra': {
+#             'ssl_verify': False
+#         }
+#     },
+#     'active': True,
+# },
 
 PROJECTS = [
     {
