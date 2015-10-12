@@ -1,4 +1,5 @@
-ARDUINO_SKETCHBOOK = /path/to/Arduino/sketchbook
+ARDUINO_DIR = /path/to/Arduino/directory
+ARDUINO_SKETCHBOOK = ${ARDUINO_DIR}/sketchbook
 
 # For Arduino Nano
 # BOARD_TAG = nano328
