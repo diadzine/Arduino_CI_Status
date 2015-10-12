@@ -10,10 +10,11 @@
 #define DATA_PIN 2
 #define CLCK_PIN 3
 
-#define CONFIG_VERSION "CI01"
+#define CONFIG_VERSION "CI02"
 #define CONFIG_START 32
 
 #define NUMITEMS(arg) ((unsigned int) (sizeof (arg) / sizeof (arg [0])))
+
 
 int i;
 
@@ -26,17 +27,25 @@ bool changed = false;
 
 enum LED_STATE_ENUM {
     OFF,
-    OK,
-    ERROR,
-    WARNING,
+    SUCCESS,
+    FAILED,
+    DISABLED,
     UNKNOWN
+};
+
+static const String LED_STATE_CODE[] = {
+    "OF",
+    "SC",
+    "FL",
+    "DS",
+    "UN"
 };
 
 static const String LED_STATE_STRING[] = {
     "OFF",
-    "OK",
-    "ERROR",
-    "WARNING",
+    "SUCCESS",
+    "FAILED",
+    "DISABLED",
     "UNKNOWN"
 };
 
@@ -97,8 +106,8 @@ struct ConfigStruct {
     Color(0, 0, 0),
     Color(0, 255, 0),
     Color(255, 0, 0),
-    Color(200, 100, 0),
-    Color(0, 0, 255)
+    Color(0, 0, 5),
+    Color(172, 152, 219)
   }
 };
 
@@ -148,16 +157,16 @@ void set_n_off() {
   set_n_state(OFF);
 }
 
-void set_n_ok() {
-  set_n_state(OK);
+void set_n_success() {
+  set_n_state(SUCCESS);
 }
 
-void set_n_error() {
-  set_n_state(ERROR);
+void set_n_failed() {
+  set_n_state(FAILED);
 }
 
-void set_n_warning() {
-  set_n_state(WARNING);
+void set_n_disabled() {
+  set_n_state(DISABLED);
 }
 
 void set_n_unknown() {
@@ -167,8 +176,9 @@ void set_n_unknown() {
 void set_color() {
   arg = SCmd.next();
   if (arg != NULL) {
+    Serial.println(arg);
     int index;
-    if((index = array_index(arg, LED_STATE_STRING)) == -1) {
+    if((index = array_index(arg, LED_STATE_CODE)) == -1) {
       Serial.println("COLOR: ERR UNKNOWN STATE");
       return;
     }
@@ -179,6 +189,7 @@ void set_color() {
 
     for(unsigned i = 0; i < 3; i++) {
       arg = SCmd.next();
+      Serial.println(arg);
 
       if (arg == NULL){
         Serial.println("COLOR: WRONG NUMBER OF ARGUMENTS");
@@ -221,12 +232,12 @@ void init_leds() {
         if (arg == NULL)        break;
         else if (strcmp(arg, LED_STATE_STRING[OFF].c_str()) == 0) {
             states[i] = OFF;
-        } else if (strcmp(arg, LED_STATE_STRING[OK].c_str()) == 0) {
-            states[i] = OK;
-        } else if (strcmp(arg, LED_STATE_STRING[ERROR].c_str()) == 0) {
-            states[i] = ERROR;
-        } else if (strcmp(arg, LED_STATE_STRING[WARNING].c_str()) == 0) {
-            states[i] = WARNING;
+        } else if (strcmp(arg, LED_STATE_STRING[SUCCESS].c_str()) == 0) {
+            states[i] = SUCCESS;
+        } else if (strcmp(arg, LED_STATE_STRING[FAILED].c_str()) == 0) {
+            states[i] = FAILED;
+        } else if (strcmp(arg, LED_STATE_STRING[DISABLED].c_str()) == 0) {
+            states[i] = DISABLED;
         } else {
             states[i] = UNKNOWN;
         }
@@ -246,6 +257,10 @@ void status() {
 void unrecognized()
 {
   Serial.println("ERR UNKNOWN COMMAND");
+  while ((arg = SCmd.next()) != NULL) {
+    Serial.print(arg);
+  }
+  Serial.println("");
 }
 
 
@@ -260,15 +275,15 @@ void setup()
   clear_states();
 
   // Setup callbacks for SerialCommand commands
-  SCmd.addCommand("OFF",set_n_off);         // Set LED N state to OFF
-  SCmd.addCommand("OK",set_n_ok);           // Set LED N state to OK
-  SCmd.addCommand("ERROR",set_n_error);     // Set LED N state to ERROR
-  SCmd.addCommand("WARNING",set_n_warning); // Set LED N state to WARNING
-  SCmd.addCommand("UNKNOWN",set_n_unknown); // Set LED N state to WARNING
-  SCmd.addCommand("INIT",init_leds);        // Init LEDs
-  SCmd.addCommand("COLOR",set_color);       // Set state color
-  SCmd.addCommand("STATUS",status);         // Status of LED States
-  SCmd.addDefaultHandler(unrecognized);     // Handler for command that isn't matched  (says "What?")
+  SCmd.addCommand("INIT",init_leds);          // Init LEDs
+  SCmd.addCommand("C",set_color);             // Set state color
+  SCmd.addCommand("STATUS",status);           // Status of LED States
+  SCmd.addCommand("OFF",set_n_off);           // Set LED N state to OFF
+  SCmd.addCommand("SUCCESS",set_n_success);   // Set LED N state to SUCCESS
+  SCmd.addCommand("FAILED",set_n_failed);     // Set LED N state to FAILED
+  SCmd.addCommand("DISABLED",set_n_disabled); // Set LED N state to DISABLED
+  SCmd.addCommand("UNKNOWN",set_n_unknown);   // Set LED N state to WARNING
+  SCmd.addDefaultHandler(unrecognized);       // Handler for command that isn't matched  (says "What?")
   Serial.println("Ready");
 
   strip.begin();
