@@ -7,7 +7,7 @@ There are 2 software for this:
   * Arduino sketch, listening on serial port, managing the leds.
   * Python script, polling CI servers, writing status on serial port.
 
-![Final product](/arduino_ci_status.png)
+![Final product](/arduino_ci_status.jpg)
 
 You can change anything in the code to deal with your expectations.
 For example, replace Jenkins polling with Nagios polling or new email in mailbox.
